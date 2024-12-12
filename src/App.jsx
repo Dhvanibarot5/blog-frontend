@@ -1,47 +1,46 @@
 import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar"; // Import Navbar
 import BlogList from "./components/BlogList";
-import CreatePost from "./components/CreatePost";
-import BlogPost from "./components/BlogPost";
-import EditPost from "./components/EditPost";
-import LoginPage from "./components/LoginPage";
-import SignupPage from "./components/SignupPage";
+import BlogForm from "./components/BlogForm";
+import BlogDetails from "./components/BlogDetails";
 
-function App() {
-  const [posts, setPosts] = useState([
-    { id: "1", title: "First Post", content: "This is the first blog post.", date: new Date().toLocaleString() },
-    { id: "2", title: "Second Post", content: "This is the second blog post.", date: new Date().toLocaleString() },
-  ]);
+const App = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [selectedBlog, setSelectedBlog] = useState(null);
 
-  const addPost = (post) => {
-    setPosts([post, ...posts]);
+  const addBlog = (blog) => {
+    setBlogs([{ ...blog, id: Date.now(), date: new Date().toLocaleDateString() }, ...blogs]);
   };
 
-  const updatePost = (id, updatedPost) => {
-    const updatedPosts = posts.map((post) => (post.id === id ? updatedPost : post));
-    setPosts(updatedPosts);
+  const updateBlog = (id, updatedBlog) => {
+    setBlogs(blogs.map((blog) => (blog.id === id ? { ...blog, ...updatedBlog } : blog)));
   };
 
-  const deletePost = (id) => {
-    setPosts(posts.filter((post) => post.id !== id));
+  const deleteBlog = (id) => {
+    setBlogs(blogs.filter((blog) => blog.id !== id));
+  };
+
+  const selectBlog = (id) => {
+    const blog = blogs.find((blog) => blog.id === id);
+    setSelectedBlog(blog);
   };
 
   return (
-    <div>
-      <Navbar /> {/* Include the Navbar here */}
-      <div className="container mx-auto p-4">
-        <Routes>
-          <Route path="/" element={<BlogList posts={posts} deletePost={deletePost} />} />
-          <Route path="/post/:id" element={<BlogPost posts={posts} />} />
-          <Route path="/create" element={<CreatePost addPost={addPost} />} />
-          <Route path="/edit/:id" element={<EditPost posts={posts} updatePost={updatePost} />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
+    <div className="min-h-screen py-6">
+      <div className="container mx-auto px-4">
+        <h1 className="text-center text-black font-extrabold text-4xl mb-8" style={{ textShadow: "2px 2px 5px rgba(0,0,0,0.3)" }}>
+          Personal Blog
+        </h1>
+        {selectedBlog ? (
+          <BlogDetails blog={selectedBlog} onBack={() => setSelectedBlog(null)} onEdit={updateBlog} onDelete={deleteBlog} />
+        ) : (
+          <>
+            <BlogList blogs={blogs} onSelect={selectBlog} onDelete={deleteBlog} />
+            <BlogForm onAdd={addBlog} />
+          </>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default App;
