@@ -1,23 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(blog.title);
-  const [content, setContent] = useState(blog.content);
-  const [image, setImage] = useState(blog.image); // Add state to handle image in editing mode
+  const [title, setTitle] = useState(blog.title || "");
+  const [content, setContent] = useState(blog.content || "");
+  const [image, setImage] = useState(blog.image || "");
+
+  // To update the form fields whenever the blog prop changes
+  useEffect(() => {
+    if (blog) {
+      setTitle(blog.title);
+      setContent(blog.content);
+      setImage(blog.image);
+    }
+  }, [blog]);
 
   const handleEdit = () => {
+    // Pass the updated blog data to the parent component
     onEdit(blog.id, { title, content, image });
-    setIsEditing(false);
+    setIsEditing(false); // Switch off editing mode
   };
 
-  // Handle image change while editing
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result);
+        setImage(reader.result); // Update the image preview
       };
       reader.readAsDataURL(file);
     }
@@ -87,11 +96,7 @@ const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
             />
             {image && (
               <div className="mt-3 text-center">
-                <img
-                  src={image}
-                  alt="Preview"
-                  style={{ maxWidth: "200px", borderRadius: "10px" }}
-                />
+                <img src={image} alt="Preview" style={{ maxWidth: "200px", borderRadius: "10px" }} />
               </div>
             )}
           </div>
@@ -115,7 +120,7 @@ const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
               color: "#333",
             }}
           >
-            {blog.title}
+            {title}
           </h2>
           <p
             className="text-muted mb-3"
@@ -125,15 +130,15 @@ const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
               color: "#555",
             }}
           >
-            {blog.content}
+            {content}
           </p>
           <p className="text-muted small mb-4">Posted on: {blog.date}</p>
 
           {/* Display image if exists */}
-          {blog.image && (
+          {image && (
             <div className="text-center mt-3">
               <img
-                src={blog.image}
+                src={image}
                 alt="Blog"
                 style={{
                   maxWidth: "100%",
