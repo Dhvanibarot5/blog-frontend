@@ -3,8 +3,8 @@ import React, { useState } from "react";
 const BlogForm = ({ onAdd }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState(null); // State to hold image
-  const [isFormVisible, setIsFormVisible] = useState(false); // State to toggle form visibility
+  const [image, setImage] = useState(null); 
+  const [isFormVisible, setIsFormVisible] = useState(false); 
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,19 +19,19 @@ const BlogForm = ({ onAdd }) => {
       setTitle("");
       setContent("");
       setImage(null);
-      setIsFormVisible(false); // Close form after submission
+      setIsFormVisible(false); 
     }
   };
 
-  // Handle image selection and preview
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result); // Store image URL
+        setImage(reader.result); 
       };
-      reader.readAsDataURL(file); // Create image preview
+      reader.readAsDataURL(file); 
     }
   };
 

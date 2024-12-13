@@ -33,7 +33,7 @@
                 }}
               >
                 <div className="d-flex">
-                  {/* Show image if it exists */}
+          
                   {blog.image && (
                     <img
                       src={blog.image}

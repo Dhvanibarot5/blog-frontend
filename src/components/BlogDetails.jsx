@@ -6,7 +6,6 @@ const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
   const [content, setContent] = useState(blog.content || "");
   const [image, setImage] = useState(blog.image || "");
 
-  // To update the form fields whenever the blog prop changes
   useEffect(() => {
     if (blog) {
       setTitle(blog.title);
@@ -16,9 +15,8 @@ const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
   }, [blog]);
 
   const handleEdit = () => {
-    // Pass the updated blog data to the parent component
     onEdit(blog.id, { title, content, image });
-    setIsEditing(false); // Switch off editing mode
+    setIsEditing(false);
   };
 
   const handleImageChange = (e) => {
@@ -26,7 +24,7 @@ const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result); // Update the image preview
+        setImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -81,7 +79,6 @@ const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
             />
           </div>
 
-          {/* Image Upload while editing */}
           <div className="mb-4">
             <label htmlFor="editImage" className="form-label text-dark font-weight-bold">
               Change Image
@@ -134,7 +131,6 @@ const BlogDetails = ({ blog, onBack, onEdit, onDelete }) => {
           </p>
           <p className="text-muted small mb-4">Posted on: {blog.date}</p>
 
-          {/* Display image if exists */}
           {image && (
             <div className="text-center mt-3">
               <img
